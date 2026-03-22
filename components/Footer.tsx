@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
-          <div className="space-y-4">
+          <div className="space-y-4 order-1 lg:order-1">
             <Link href="/" className="flex items-center gap-2 group">
               <Image
                 src="/images/logo.jpg"
@@ -51,7 +51,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="order-3 lg:order-4">
             <h3 className="text-white font-semibold mb-6 text-lg">Quick Links</h3>
             <ul className="space-y-3">
               {NAV_ITEMS.slice(0, 6).map((item) => (
@@ -69,7 +69,7 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div>
+          <div className="order-4 lg:order-3">
             <h3 className="text-white font-semibold mb-6 text-lg">Contact Us</h3>
             <ul className="space-y-4">
               <li>
@@ -111,7 +111,7 @@ export default function Footer() {
           </div>
 
           {/* Service Area */}
-          <div>
+          <div className="order-2 lg:order-2">
             <ServiceAreaMap />
           </div>
         </div>
