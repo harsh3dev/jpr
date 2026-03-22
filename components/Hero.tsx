@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import CTAButton from './CTAButton';
+import { CONTACT_INFO } from '@/lib/constants';
 
 interface HeroProps {
   headline?: string;
@@ -61,8 +62,28 @@ export default function Hero({
         </div>
       </div>
 
-      {/* Fade to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-linear-to-t from-background via-background/60 to-transparent z-10 pointer-events-none" />
+      {/* Contact Bar - replaces fade, acts as separator */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 bg-primary-dark">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-12 py-3 sm:py-4">
+          <div className="flex items-center gap-4 sm:gap-12">
+            {CONTACT_INFO.phones.map((phone) => (
+              <a
+                key={phone}
+                href={`tel:${phone.replace(/\s|\(|\)|-/g, '')}`}
+                className="text-white text-base sm:text-2xl font-bold tracking-wide hover:text-accent transition-colors"
+              >
+                {phone}
+              </a>
+            ))}
+          </div>
+          <a
+            href={`mailto:${CONTACT_INFO.email}`}
+            className="text-white text-base sm:text-2xl font-bold tracking-wide hover:text-accent transition-colors"
+          >
+            {CONTACT_INFO.email}
+          </a>
+        </div>
+      </div>
     </section>
   );
 }

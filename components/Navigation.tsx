@@ -1,14 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { NAV_ITEMS } from '@/lib/constants';
+import { NAV_ITEMS, CONTACT_INFO } from '@/lib/constants';
 
 export default function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [barHeight, setBarHeight] = useState(44);
+  const barRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+
+  const measureBar = useCallback(() => {
+    if (barRef.current) {
+      setBarHeight(barRef.current.offsetHeight);
+    }
+  }, []);
+
+  useEffect(() => {
+    measureBar();
+    window.addEventListener('resize', measureBar);
+    return () => window.removeEventListener('resize', measureBar);
+  }, [measureBar]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -22,16 +37,52 @@ export default function Navigation() {
   }, [pathname]);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100' : 'bg-transparent'
-      }`}
-    >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+    <>
+      {/* Top Contact Bar */}
+      <div
+        ref={barRef}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled ? 'bg-primary-dark' : 'bg-black/40 backdrop-blur-sm'
+        }`}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-12 py-1.5 sm:py-2">
+          <div className="flex items-center gap-4 sm:gap-12">
+            {CONTACT_INFO.phones.map((phone) => (
+              <a
+                key={phone}
+                href={`tel:${phone.replace(/\s|\(|\)|-/g, '')}`}
+                className="text-white text-sm sm:text-lg font-bold tracking-wide hover:text-accent transition-colors"
+              >
+                {phone}
+              </a>
+            ))}
+          </div>
+          <a
+            href={`mailto:${CONTACT_INFO.email}`}
+            className="text-white text-sm sm:text-lg font-bold tracking-wide hover:text-accent transition-colors"
+          >
+            {CONTACT_INFO.email}
+          </a>
+        </div>
+      </div>
+
+      <header
+        style={{ top: barHeight }}
+        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100' : 'bg-transparent'
+        }`}
+      >
+        <nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <div className="flex items-center justify-between h-20 lg:h-24 transition-all duration-300">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-primary rounded-lg">
-            <span className="text-3xl transition-transform group-hover:scale-110 duration-300">🌿</span>
+            <Image
+              src="/images/logo.jpg"
+              alt="Team JPR Logo"
+              width={50}
+              height={50}
+              className="rounded-full transition-transform group-hover:scale-110 duration-300"
+            />
             <span className={`text-2xl font-extrabold tracking-tight transition-colors duration-300 ${scrolled ? 'text-primary-dark' : 'text-white drop-shadow-md'}`}>
               Team JPR
             </span>
@@ -123,5 +174,6 @@ export default function Navigation() {
         </div>
       </nav>
     </header>
+    </>
   );
 }
