@@ -6,7 +6,7 @@ const PHONE = '+19053518545';
 const PHONE_DISPLAY = '+1 (905) 351-8545';
 
 export default function FloatingWidget() {
-  const [chatOpen, setChatOpen] = useState(true);
+  const [chatOpen, setChatOpen] = useState(false);
   const [message, setMessage] = useState('');
 
   const handleSend = () => {
@@ -27,15 +27,10 @@ export default function FloatingWidget() {
   const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="fixed bottom-6 left-6 z-[100] flex flex-col items-start gap-3">
+    <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-3">
       {/* WhatsApp Chat Popup */}
-      <div
-        className={`transition-all duration-300 origin-bottom-left ${
-          chatOpen
-            ? 'opacity-100 scale-100 translate-y-0'
-            : 'opacity-0 scale-75 translate-y-4 pointer-events-none'
-        }`}
-      >
+      {chatOpen && (
+      <div className="animate-fade-in-up">
         <div className="w-[340px] sm:w-[370px] rounded-2xl overflow-hidden shadow-2xl flex flex-col" style={{ maxHeight: 'calc(100vh - 180px)' }}>
           {/* Header */}
           <div className="bg-[#075E54] px-4 py-3 flex items-center gap-3">
@@ -99,9 +94,10 @@ export default function FloatingWidget() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Floating Buttons */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col items-end gap-3">
         {/* WhatsApp / Close toggle */}
         <button
           onClick={() => setChatOpen(!chatOpen)}
